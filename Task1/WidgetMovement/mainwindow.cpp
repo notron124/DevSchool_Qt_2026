@@ -14,8 +14,8 @@ static constexpr int MAX_FALL_SPEED = 5;
 static constexpr int MOVE_TIMEOUT_MS = 50;
 
 static constexpr int SPAWN_Y = 100;
-static constexpr int SNOWFLAKE_WIDTH = 50;
-static constexpr int SNOWFLAKE_HEIGHT = 50;
+static constexpr int SNOWFLAKE_WIDTH = 25;
+static constexpr int SNOWFLAKE_HEIGHT = 25;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         QPushButton* snowflake = new QPushButton("*", this);
         int randomX = QRandomGenerator::global()->bounded(0, this->width() - SNOWFLAKE_WIDTH);
+        snowflake->setStyleSheet("QPushButton {background-color: transparent; border: none; font-weight: bold; font-size: 48px;}");
         snowflake->setGeometry(QRect(QPoint(randomX, SPAWN_Y), QSize(SNOWFLAKE_WIDTH, SNOWFLAKE_HEIGHT)));
         snowflake->setProperty("fallSpeed", fallSpeed);
         snowflake->show();
@@ -43,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         QTimer* moveTimer = new QTimer(snowflake);
 
-        connect(moveTimer, &QTimer::timeout, this, [snowflake, this]{
+        connect(moveTimer, &QTimer::timeout, this, [snowflake, this] {
             snowflake->move(QPoint(snowflake->x(),
                                    snowflake->y() + snowflake->property("fallSpeed").toInt()));
             int maxY = this->height() - snowflake->height();
