@@ -47,11 +47,20 @@ MainWindow::MainWindow(QWidget *parent)
             snowflake->move(QPoint(snowflake->x(),
                                    snowflake->y() + snowflake->property("fallSpeed").toInt()));
             int maxY = this->height() - snowflake->height();
-            if (snowflake->y() >= maxY) {
-                this->setStyleSheet("QMainWindow { background-color: red; }");
-                this->setWindowTitle("You LOSE!");
+            int maxX = this->width() - snowflake->width();
+
+            if (snowflake->x() >= maxX) {
                 snowflake->deleteLater();
+                return;
             }
+
+            if (snowflake->y() < maxY) {
+                return;
+            }
+
+            this->setStyleSheet("QMainWindow { background-color: red; }");
+            this->setWindowTitle("You LOSE!");
+            snowflake->deleteLater();
         });
 
         moveTimer->start(MOVE_TIMEOUT_MS);
