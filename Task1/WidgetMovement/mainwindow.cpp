@@ -49,12 +49,9 @@ MainWindow::MainWindow(QWidget *parent)
         QTimer* moveTimer = new QTimer(snowflake);
 
         connect(moveTimer, &QTimer::timeout, this, [snowflake, this] {
-            const QPoint globalCursorPos = QCursor::pos();
-            const QPoint localCursorPos = snowflake->mapFromGlobal(globalCursorPos);
-            bool isHovering = snowflake->rect().contains(localCursorPos);
             int moveSpeed = snowflake->property("fallSpeed").toInt();
 
-            if (isHovering) {
+            if (snowflake->underMouse()) {
                 moveSpeed *= 2;
             }
 
