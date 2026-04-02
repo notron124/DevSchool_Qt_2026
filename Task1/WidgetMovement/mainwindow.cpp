@@ -17,6 +17,9 @@ static constexpr int MAX_SPAWN_Y = 100;
 static constexpr int SNOWFLAKE_WIDTH = 50;
 static constexpr int SNOWFLAKE_HEIGHT = 50;
 
+
+#include "mainwindow.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -84,5 +87,4 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-
 }
