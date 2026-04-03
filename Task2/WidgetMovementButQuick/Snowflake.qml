@@ -7,13 +7,14 @@ Button {
     width: 50
     height: 50
     hoverEnabled: false
-    x: Math.random() * (parent.width - width)
     y: Math.random() * 100
-    property int fallDuration: 10000
+    readonly property int rotationAnimationDuration: 1000 + Math.random() * 1000
+    property real fallSpeed: 1.0 + Math.random() * 2.0
     readonly property int animationDurationScale: 2
 
     contentItem: Text {
         text: snowflake.text
+        color: "#ffffff"
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pointSize: 56
@@ -24,32 +25,59 @@ Button {
         color: "transparent"
     }
 
-    PropertyAnimation {
-        id: fallAnimation
-        target: snowflake
-        property: "y"
-        from: snowflake.y
-        to: root.height - snowflake.height / 2
-        duration: snowflake.fallDuration
-        running: true
+    RotationAnimation on rotation {
+        from: 0
+        to: 360
+        duration: 2000
+        loops: Animation.Infinite
+    }
 
-        onStopped: {
+    Component.onCompleted: {
+        x = Math.random() * (parent.width - width);
+    }
+
+    // Пробовал через PropertyAnimation, с ним было
+    // не очень удобно и не очевидно контроллировать скорость падения
+    Timer {
+        id: moveTimer
+        interval: 50
+        repeat: true
+        running: true
+        onTriggered: {
+            var maxX = parent.parent.width - width;
+            var maxY = parent.parent.height - height;
+
+            y += fallSpeed;
+
+            if (x >= maxX) {
+                snowflake.destroy();
+                return;
+            }
+
+            if (y < maxY) {
+                return;
+            }
+
+            // Думаю, использование идентификатора родителя в общем случае - плохо,
+            // но в текущем сценарии работает.
+            root.color = "red";
+            root.title = "You LOSE!";
             snowflake.destroy();
-            root.color = "red"; // Думаю, в общем случае дак делать не хорошо, но в данной задаче работает
         }
     }
+
 
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
 
         onEntered: {
-            fallAnimation.duration /= 2;
+            snowflake.fallSpeed *= snowflake.animationDurationScale;
             snowflake.scale = 1.2;
         }
 
         onExited: {
-            fallAnimation.duration = fallAnimation.duration * 2;
+            snowflake.fallSpeed /= snowflake.animationDurationScale;
             snowflake.scale = 1.0;
         }
 
