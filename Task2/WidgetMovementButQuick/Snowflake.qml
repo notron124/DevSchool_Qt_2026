@@ -32,6 +32,9 @@ Button {
         loops: Animation.Infinite
     }
 
+    // Это чтобы убать binding к ширине окна
+    // если явно сделать x: ..., то при изменении ширины окна
+    // "снежинки" будут "бегать" по всему окну.
     Component.onCompleted: {
         x = Math.random() * (parent.width - width);
     }
@@ -72,12 +75,12 @@ Button {
         hoverEnabled: true
 
         onEntered: {
-            snowflake.fallSpeed *= snowflake.animationDurationScale;
+            fallSpeed *= animationDurationScale;
             snowflake.scale = 1.2;
         }
 
         onExited: {
-            snowflake.fallSpeed /= snowflake.animationDurationScale;
+            fallSpeed /= animationDurationScale;
             snowflake.scale = 1.0;
         }
 
